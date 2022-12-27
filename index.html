@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元旦快乐</title>
+
+    <style type="text/css">
+        html {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background-size: 100% 33.33%;
+            font-family: '华文行楷';
+            background: #000 url('https://production-4gnv3qeqb070546b-1312154413.tcloudbaseapp.com/newyear/1.gif') center center;
+        }
+        .zz{z-index:1000;position: fixed;left:0;right:0;top:0;bottom:0;background-color: rgba(0,0,0,.9);}
+        #surprise {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+            padding:5px 10px;
+            border-radius:15px;
+        }
+
+        .word {
+            color: #fff;
+            position: fixed;
+            top: 5vh;
+            left: 5vw;
+            font-size: 14px;
+        }
+
+        .word .name {
+            color: #fff;
+            text-shadow: 4px 4px 2px red;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .greeting{
+            line-height:1.6;
+        }
+
+        @media screen and (min-width: 768px) {
+            body {
+                background-size: 90%;
+                background-repeat: no-repeat;
+            }
+        }
+
+        .play {
+            position: absolute;
+            right: 3vw;
+            top: 3vw;
+            z-index:100;
+        }
+
+        .play svg {
+            width: 30px;
+            height: 30px;
+            fill: #fff;
+            border-radius:50%;
+            background-color: rgba(255,255,255,0.3);
+            
+        }
+
+        .play .playing {
+            animation: rotating 1s infinite;
+        }
+
+        @keyframes rotating {
+            from {
+                transform: rotate(0);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="zz">
+        <button id="surprise">🧨元旦惊喜</button>
+
+    </div>
+    <!-- <audio src="1.mp3" loop></audio> -->
+    <div class="word">
+        <p>
+            <span class="prefix">我亲爱的</span><span class="name">刘欣悦</span>
+        </p>
+        <pre class="greeting">
+            🐰𝟚𝟘𝟚𝟛🐰 <br>
+            🧨 新的一年 新的開始 𝑾𝒊𝒕𝒉 𝒚𝒐𝒖💕 <br>
+            ‘’祝我们都 发财 被爱💗 好运常在‘‘ <br>
+            ‘’我们会越来越好✨✨✨‘‘ <br>
+        </pre>
+    </div>
+    <div class="play">
+        <svg t="1671018884603" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            p-id="1429" width="30" height="30">
+            <path
+                d="M768.496 359.12L648.224 572a128 128 0 1 1-1.648-92.288l90.784-160.656A295.2 295.2 0 0 0 520 224C356.512 224 224 356.512 224 520S356.512 816 520 816C683.472 816 816 683.472 816 520c0-59.328-17.44-114.56-47.504-160.88zM600.272 562.352l-0.272-0.144 1.648-2.912a80 80 0 1 0-1.376 3.072zM864 520C864 709.984 709.984 864 520 864S176 709.984 176 520 330.016 176 520 176 864 330.016 864 520z"
+                p-id="1430"></path>
+        </svg>
+    </div>
+    <script>
+        const query = new URLSearchParams(location.search)
+        const preview = query.get('p')
+        let data = query.get("data");
+        try {
+            data = JSON.parse(decodeURIComponent(data)) || {};
+        } catch (err) {
+            console.log("err", err);
+            data = {};
+        }
+        //data=data
+
+        const initData = {
+            prefix:'我亲爱的',
+            text:'刘欣悦',
+            textColor:'ffffff',
+            shadowColor:'ff0000',
+            greeting:`𝟚𝟘𝟚𝟛\n🧨 新的一年 新的開始 𝑾𝒊𝒕𝒉 𝒚𝒐𝒖💕 \n‘’祝我们都 发财 被爱 好运常在‘‘ \n‘’我们会越来越好‘‘ `,
+            bgm:'https://production-4gnv3qeqb070546b-1312154413.tcloudbaseapp.com/newyear/1.mp3'
+        }
+
+        const opt = Object.assign({},initData,data)
+
+        const $zz = document.querySelector(".zz");
+        const $username = document.querySelector(".name");
+        const $prefix = document.querySelector(".prefix");
+        const $greeting = document.querySelector(".greeting");
+
+        $username.innerText = opt.text;
+        $username.style.color = "#" + opt.textColor;
+        $username.style.textShadow = "4px 4px 5px #" + opt.shadowColor;
+
+        $prefix.innerHTML = opt.prefix
+        $greeting.innerHTML = opt.greeting
+
+
+        let suprisebtn = document.getElementById('surprise')
+        // let audio = document.querySelector('audio')
+        // audio.src = data.bgm || 'https://production-4gnv3qeqb070546b-1312154413.tcloudbaseapp.com/newyear/1.mp3'
+
+
+        // 背景音乐
+        const play = document.querySelector('.play');
+            const playBtn = play.querySelector('.play svg');
+            let player
+            if(preview){
+                play.style.display = 'none';
+                $zz.style.display = 'none'
+            }
+            if (opt.bgm) {
+                player = new Audio()
+                player.src = decodeURIComponent(opt.bgm);
+                player.loop = true;
+
+                player.onplay = function () {
+                    playBtn.classList.add('playing')
+                }
+                player.onpause = function () {
+                    playBtn.classList.remove('playing')
+                }
+            }
+            play.onclick = function () {
+                if (!player) return;
+                if (player.paused) {
+                    player.play();
+                } else {
+                    player.pause();
+                }
+            }
+
+        suprisebtn.onclick = function () {
+            player.play();
+            $zz.style.display = 'none'
+            suprisebtn.style.display = 'none'
+            
+        }
+    </script>
+</body>
+
+</html>
